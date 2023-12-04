@@ -14,9 +14,9 @@ class RestoreScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: colorSecondary,
-        body: Center(
-            child: Column(
+      backgroundColor: colorSecondary,
+      body: Center(
+        child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             const Image(
@@ -34,8 +34,10 @@ class RestoreScreen extends StatelessWidget {
                       color: Colors.red.withOpacity(0.2),
                       spreadRadius: 2,
                       blurRadius: 4,
-                      offset: const Offset(5,
-                          5), // Desplazamiento horizontal y vertical de la sombra
+                      offset: const Offset(
+                        5,
+                        5,
+                      ),
                     ),
                   ],
                   borderRadius: const BorderRadius.only(
@@ -47,7 +49,9 @@ class RestoreScreen extends StatelessWidget {
               child: const FormRestore(),
             )
           ],
-        )));
+        ),
+      ),
+    );
   }
 }
 

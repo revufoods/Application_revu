@@ -31,10 +31,10 @@ class DetailScreen extends StatelessWidget {
           future: restaurantAliado.bakeryAliado(aliadoId, branchId),
           builder: (_, AsyncSnapshot<BakeryAliado?> snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
-              return Center(
-                child: Container(
+              return const Center(
+                child: SizedBox(
                   height: 180,
-                  child: const CupertinoActivityIndicator(
+                  child: CupertinoActivityIndicator(
                     color: colorPrimary,
                   ),
                 ),
@@ -81,8 +81,10 @@ class DetailScreen extends StatelessWidget {
                     ),
                   ),
                   FutureBuilder<RevuSopresa?>(
-                    future:
-                        restaurantAliado.revuSopresaBakery(aliadoId, branchId),
+                    future: restaurantAliado.revuSopresaBakery(
+                      aliadoId,
+                      branchId,
+                    ),
                     builder: (_, AsyncSnapshot<RevuSopresa?> revuSnapshot) {
                       if (revuSnapshot.connectionState ==
                           ConnectionState.waiting) {
@@ -105,174 +107,186 @@ class DetailScreen extends StatelessWidget {
                         );
                       }
 
-                      return Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          ListView.builder(
-                            shrinkWrap: true,
-                            itemCount: revuSorpresaAliado.images!.length,
-                            itemBuilder: (BuildContext context, int index) {
-                              final image = revuSorpresaAliado.images![index];
-                              return Image.network(
-                                image.url,
-                                width: 150,
-                                height: 150,
-                              );
-                            },
-                          ),
-                          Text(
-                            revuSorpresaAliado.description,
-                            textAlign: TextAlign.center,
-                            style: const TextStyle(
-                                fontSize: 18, fontWeight: FontWeight.bold),
-                          ),
-                          const SizedBox(height: 8),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              const SizedBox(
-                                width: 60,
+                      return SizedBox(
+                        height: 300,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: <Widget>[
+                            Expanded(
+                              child: ListView.builder(
+                                shrinkWrap: true,
+                                scrollDirection: Axis.horizontal,
+                                itemCount: revuSorpresaAliado.images!.length,
+                                itemBuilder: (BuildContext context, int index) {
+                                  final image =
+                                      revuSorpresaAliado.images![index];
+                                  return Image.network(
+                                    image.url,
+                                    width: 150,
+                                    height: 150,
+                                  );
+                                },
                               ),
-                              RichText(
-                                text: TextSpan(
-                                  text: '\$',
-                                  style: const TextStyle(
-                                      color: Colors.grey, fontSize: 20),
-                                  children: <TextSpan>[
-                                    TextSpan(
-                                      text: revuSorpresaAliado.price.toString(),
-                                      style: const TextStyle(
-                                        fontSize: 20,
-                                        decoration: TextDecoration.lineThrough,
-                                        decorationColor: Colors.grey,
-                                        decorationThickness: 2.0,
-                                      ),
-                                    ),
-                                  ],
-                                ),
+                            ),
+                            Text(
+                              revuSorpresaAliado.description,
+                              textAlign: TextAlign.center,
+                              style: const TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
                               ),
-                              const SizedBox(width: 25),
-                            ],
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              const SizedBox(
-                                width: 60,
-                              ),
-                              const Text(
-                                '\$',
-                                style: TextStyle(
-                                    color: colorPrimary,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 20),
-                              ),
-                              Text(
-                                revuSorpresaAliado.revuPrice.toString(),
-                                style: const TextStyle(
-                                    color: colorPrimary,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 20),
-                              ),
-                              const SizedBox(width: 25),
-                            ],
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 25),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            ),
+                            const SizedBox(height: 8),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
                               children: [
-                                const Text(
-                                  'Pick up time: ',
-                                  style: TextStyle(fontSize: 20),
-                                ),
                                 const SizedBox(
                                   width: 60,
                                 ),
-                                Text(
-                                  revuSorpresaAliado.startPickupTime.toString(),
-                                  style: const TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 20),
+                                RichText(
+                                  text: TextSpan(
+                                    text: '\$',
+                                    style: const TextStyle(
+                                        color: Colors.grey, fontSize: 20),
+                                    children: <TextSpan>[
+                                      TextSpan(
+                                        text:
+                                            revuSorpresaAliado.price.toString(),
+                                        style: const TextStyle(
+                                          fontSize: 20,
+                                          decoration:
+                                              TextDecoration.lineThrough,
+                                          decorationColor: Colors.grey,
+                                          decorationThickness: 2.0,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
                                 ),
-                                const Text('-'),
-                                Text(
-                                  revuSorpresaAliado.endPickupTime.toString(),
-                                  style: const TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 20),
-                                ),
+                                const SizedBox(width: 25),
                               ],
                             ),
-                          ),
-                          const SizedBox(
-                            height: 35,
-                          ),
-                          ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: colorPrimary,
-                            ),
-                            onPressed: restaurantAliado.autenticando
-                                ? () => {}
-                                : () async {
-                                    // Mostrar el AlertDialog con indicador de carga
-                                    showDialog(
-                                      context: context,
-                                      builder: (BuildContext context) {
-                                        return const AlertDialog(
-                                          content: Column(
-                                            mainAxisSize: MainAxisSize.min,
-                                            children: [
-                                              CircularProgressIndicator(), // Indicador de carga
-                                              SizedBox(height: 16.0),
-                                              Text('Processing Purchase...'),
-                                            ],
-                                          ),
-                                        );
-                                      },
-                                    );
-
-                                    // Retrasar el cierre del AlertDialog durante 1.5 segundos
-                                    // ignore: prefer_const_constructors
-                                    await Future.delayed(Duration(
-                                        seconds: 1, milliseconds: 500));
-
-                                    // Cerrar el AlertDialog
-                                    Navigator.of(context).pop();
-
-                                    // Realizar la compra
-                                    List<Map<String, dynamic>> products = [
-                                      {
-                                        "id": revuSorpresaAliado.id,
-                                        "amount": 1,
-                                      },
-                                      // Agrega más productos si es necesario
-                                    ];
-                                    final buyOk = await restaurantAliado
-                                        .payment(products);
-
-                                    if (buyOk) {
-                                      Navigator.pushReplacementNamed(
-                                          context, '/thanks');
-                                    } else {
-                                      // Mostrar alerta
-                                      showAlert(context, 'Error',
-                                          'The purchase could not be made');
-                                    }
-                                  },
-                            child: const Padding(
-                              padding: EdgeInsets.all(8.0),
-                              child: Text(
-                                'Buy',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 18,
-                                  color: Colors.white,
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                const SizedBox(
+                                  width: 60,
                                 ),
+                                const Text(
+                                  '\$',
+                                  style: TextStyle(
+                                    color: colorPrimary,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 20,
+                                  ),
+                                ),
+                                Text(
+                                  revuSorpresaAliado.revuPrice.toString(),
+                                  style: const TextStyle(
+                                    color: colorPrimary,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 20,
+                                  ),
+                                ),
+                                const SizedBox(width: 25),
+                              ],
+                            ),
+                            Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 25),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  const Text(
+                                    'Pick up time: ',
+                                    style: TextStyle(fontSize: 20),
+                                  ),
+                                  const SizedBox(
+                                    width: 60,
+                                  ),
+                                  Text(
+                                    revuSorpresaAliado.startPickupTime
+                                        .toString(),
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 20,
+                                    ),
+                                  ),
+                                  const Text('-'),
+                                  Text(
+                                    revuSorpresaAliado.endPickupTime.toString(),
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 20,
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
-                          )
-                        ],
+                            const SizedBox(
+                              height: 35,
+                            ),
+                            ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: colorPrimary,
+                              ),
+                              onPressed: restaurantAliado.autenticando
+                                  ? () => {}
+                                  : () async {
+                                      showDialog(
+                                        context: context,
+                                        builder: (BuildContext context) {
+                                          return const AlertDialog(
+                                            content: Column(
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: [
+                                                CircularProgressIndicator(),
+                                                SizedBox(height: 16.0),
+                                                Text('Processing Purchase...'),
+                                              ],
+                                            ),
+                                          );
+                                        },
+                                      );
+                                      await Future.delayed(
+                                        const Duration(
+                                          seconds: 1,
+                                          milliseconds: 500,
+                                        ),
+                                      );
+                                      Navigator.of(context).pop();
+                                      List<Map<String, dynamic>> products = [
+                                        {
+                                          "id": revuSorpresaAliado.id,
+                                          "amount": 1,
+                                        },
+                                      ];
+                                      final buyOk = await restaurantAliado
+                                          .payment(products);
+
+                                      if (buyOk) {
+                                        Navigator.pushReplacementNamed(
+                                            context, '/thanks');
+                                      } else {
+                                        showAlert(context, 'Error',
+                                            'The purchase could not be made');
+                                      }
+                                    },
+                              child: const Padding(
+                                padding: EdgeInsets.all(8.0),
+                                child: Text(
+                                  'Buy',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 18,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ),
+                            )
+                          ],
+                        ),
                       );
                     },
                   ),
@@ -295,7 +309,6 @@ class DetailScreen extends StatelessWidget {
                 },
               );
               if (result != null) {
-                // ignore: use_build_context_synchronously
                 ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                   content: Text('Calificación enviada'),
                   duration: Duration(seconds: 3),

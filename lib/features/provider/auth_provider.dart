@@ -36,6 +36,7 @@ class AuthProvider with ChangeNotifier {
   List<BakeryAliado> onBakeryAliado = [];
 
   final _storage = const FlutterSecureStorage();
+
   bool get autenticando => _autenticando;
 
   set autenticando(bool valor) {
@@ -148,6 +149,7 @@ class AuthProvider with ChangeNotifier {
       return false;
     }
   }
+
 // RECOVER PASSWORD
 
   Future recoverPassword(
@@ -198,7 +200,7 @@ class AuthProvider with ChangeNotifier {
     }
   }
 
-  Future<UsuarioResponse> usaurio() async {
+  Future<UsuarioResponse> userInfo() async {
     final token = await _storage.read(key: 'token');
     final responseUsuario = await http
         .get(Uri.parse('${Environment.apiURL}/auth/validateToken'), headers: {
@@ -209,11 +211,16 @@ class AuthProvider with ChangeNotifier {
     return usuarioResponseFromJson(responseUsuario.body);
   }
 
-  Future updateUser(int userId, String names, String last_names, String email,
-      String cellphone) async {
+  Future updateUser(
+    String userId,
+    String names,
+    String lastName,
+    String email,
+    String cellphone,
+  ) async {
     final data = {
       'names': names,
-      'last_names': last_names,
+      'last_names': lastName,
       'email': email,
       'cellphone': cellphone
     };
@@ -226,9 +233,10 @@ class AuthProvider with ChangeNotifier {
         },
         body: jsonEncode(data));
 
-    if (userUpdate.statusCode == 201) {
+    if (userUpdate.statusCode == 200) {
       final updateResponse = userPutResponseFromJson(userUpdate.body);
-
+      debugPrint("updateResponse");
+      debugPrint(updateResponse.toString());
       return true;
     } else {
       final updateBody = jsonDecode(userUpdate.body);

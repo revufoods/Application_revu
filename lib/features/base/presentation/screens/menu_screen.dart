@@ -76,27 +76,38 @@ class MenuScreen extends StatelessWidget {
                       Column(
                         children: [
                           IconButton(
-                              onPressed: () =>
-                                  Navigator.pushNamed(context, '/restaurant'),
-                              icon: const Image(
-                                image: AssetImage('assets/icono_comida.png'),
-                                width: 43,
-                              )),
-                          const Text('Restaurant',
-                              style: TextStyle(color: Colors.black45))
+                            onPressed: () =>
+                                Navigator.pushNamed(context, '/restaurant'),
+                            icon: const Image(
+                              image: AssetImage('assets/icono_comida.png'),
+                              width: 43,
+                            ),
+                          ),
+                          const Text(
+                            'Restaurant',
+                            style: TextStyle(
+                              color: Colors.black45,
+                            ),
+                          )
                         ],
                       ),
                       Column(
                         children: [
                           IconButton(
-                              onPressed: () =>
-                                  Navigator.pushNamed(context, '/bakery'),
+                              onPressed: () => Navigator.pushNamed(
+                                    context,
+                                    '/bakery',
+                                  ),
                               icon: const Image(
                                 image: AssetImage('assets/icono_panaderia.png'),
                                 width: 40,
                               )),
-                          const Text('Bakery',
-                              style: TextStyle(color: Colors.black45))
+                          const Text(
+                            'Bakery',
+                            style: TextStyle(
+                              color: Colors.black45,
+                            ),
+                          )
                         ],
                       ),
                       Column(
@@ -122,23 +133,20 @@ class MenuScreen extends StatelessWidget {
                 future: menuProvider.restaurant(),
                 builder: (_, AsyncSnapshot snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
-                    return Container(
+                    return const SizedBox(
                       height: 180,
-                      child: const CupertinoActivityIndicator(
+                      child: CupertinoActivityIndicator(
                         color: colorPrimary,
                       ),
                     );
                   }
                   if (snapshot.hasError) {
-                    // Manejar el error aquí si es necesario
-                    return Container(
-                      child: const Text('Error loading data'),
-                    );
+                    return const Text('Error loading data');
                   }
                   if (!snapshot.hasData || snapshot.data == null) {
-                    return Container(
+                    return const SizedBox(
                       height: 180,
-                      child: const Text('No data available'),
+                      child: Text('No data available'),
                     );
                   }
                   final List<Restaurant> restaurant = snapshot.data;

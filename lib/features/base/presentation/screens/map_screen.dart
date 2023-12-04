@@ -36,27 +36,35 @@ class _MapScreenState extends State<MapScreen> {
     Position position = await determinePosition();
     setState(() {
       myPosition = LatLng(position.latitude, position.longitude);
-      print(myPosition);
     });
   }
 
   void loadBranchMapData() async {
     final map = Provider.of<AuthProvider>(context);
-
     try {
       final response = await map.getAliado();
       branchMapData = response.data;
       addBranchMarkersToMap();
     } catch (error) {
-      // Maneja el error según tus necesidades.
+      debugPrint(error.toString());
     }
   }
+
+  bool _isInit = true;
 
   @override
   void initState() {
     super.initState();
-    getCurrentLocation();
-    loadBranchMapData();
+  }
+
+  @override
+  void didChangeDependencies() {
+    if (_isInit) {
+      loadBranchMapData();
+      getCurrentLocation();
+    }
+    _isInit = false;
+    super.didChangeDependencies();
   }
 
   @override
@@ -69,26 +77,31 @@ class _MapScreenState extends State<MapScreen> {
       body: myPosition == null
           ? const Center(
               child: CupertinoActivityIndicator(
-              color: colorPrimary,
-            ))
+                color: colorPrimary,
+              ),
+            )
           : GoogleMap(
               mapType: MapType.normal,
               initialCameraPosition: myPosition != null
                   ? CameraPosition(
-                      target:
-                          myPosition!, // Utiliza ! para indicar que no es nulo
+                      target: myPosition!,
                       zoom: 12,
                     )
                   : const CameraPosition(
-                      // Proporciona una ubicación de respaldo si myPosition es nulo
-                      target: LatLng(0.0,
-                          0.0), // Cambia esta ubicación según tus necesidades
+                      target: LatLng(
+                        0.0,
+                        0.0,
+                      ),
                       zoom: 12,
                     ),
-              onMapCreated: (GoogleMapController controller) {
+              onMapCreated: (
+                GoogleMapController controller,
+              ) {
                 mapController = controller;
-
-                addMarker('Tu ubicacion', myPosition ?? const LatLng(0.0, 0.0));
+                addMarker(
+                  'Your ubication',
+                  myPosition ?? const LatLng(0.0, 0.0),
+                );
               },
               markers: _markers.values.toSet(),
             ),
@@ -99,7 +112,7 @@ class _MapScreenState extends State<MapScreen> {
     var marker = Marker(
       markerId: MarkerId(id),
       position: location,
-      infoWindow: InfoWindow(title: id, snippet: 'Ubicación actual'),
+      infoWindow: InfoWindow(title: id, snippet: 'Current ubication'),
     );
     _markers[id] = marker;
     setState(() {});
@@ -107,9 +120,14 @@ class _MapScreenState extends State<MapScreen> {
 
   void addBranchMarkersToMap() {
     for (var branch in branchMapData) {
-      LatLng branchLocation =
-          LatLng(branch.coordinates[0], branch.coordinates[1]);
-      addMarker(branch.name, branchLocation);
+      LatLng branchLocation = LatLng(
+        branch.coordinates[0],
+        branch.coordinates[1],
+      );
+      addMarker(
+        branch.name,
+        branchLocation,
+      );
     }
   }
 }

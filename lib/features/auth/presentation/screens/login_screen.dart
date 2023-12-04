@@ -31,7 +31,6 @@ class LoginScreen extends StatelessWidget {
                     width: 150,
                   ),
                   const SizedBox(height: 130),
-
                   Container(
                     height:
                         size.height - 260, // 80 los dos sizebox y 100 el ícono
@@ -39,8 +38,9 @@ class LoginScreen extends StatelessWidget {
                     decoration: const BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(40),
-                          topRight: Radius.circular(40)),
+                        topLeft: Radius.circular(40),
+                        topRight: Radius.circular(40),
+                      ),
                     ),
                     child: const _LoginForm(),
                   )
