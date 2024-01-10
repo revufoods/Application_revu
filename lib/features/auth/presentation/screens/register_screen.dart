@@ -4,6 +4,8 @@ import 'package:app/features/provider/provider.dart';
 import 'package:app/helpers/show_alert.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:flutter/gestures.dart';
 
 import '../../../../config/config.dart';
 import '../../../shared/shared.dart';
@@ -61,6 +63,14 @@ class _FormState extends State<_Form> {
     setState(() {
       obscureText = !obscureText;
     });
+  }
+  Future<void> _launchURL(String urlString) async {
+    final Uri url = Uri.parse(urlString);
+    if (await canLaunchUrl(url)) {
+      await launchUrl(url);
+    } else {
+      throw 'No se pudo lanzar $urlString';
+    }
   }
 
   @override
@@ -175,14 +185,31 @@ class _FormState extends State<_Form> {
               activeColor: const Color(0xffffa500),
               value: _swiches,
               onChanged: (value) {
-                setState(() {
+               setState(() {
                   _swiches =
                       value; // Actualiza el valor del _swiches cuando se cambia el estado del cuadro de verificación
                 });
               },
               title: const Text(
-                  'You authorize the processing of your personal data. Learn about our data processing policy.'),
+                  'You authorize the processing of your personal data.'),
             ),
+            RichText(
+            text: TextSpan(
+              style: DefaultTextStyle.of(context).style,
+              children: <TextSpan>[
+                TextSpan(text: ''),
+                TextSpan(
+                  text: 'Learn about our data processing policy.',
+                  style: TextStyle(decoration: TextDecoration.underline),
+                  recognizer: TapGestureRecognizer()
+                    ..onTap = () {
+                      _launchURL('https://www.revu-foods.com/Terms-and-Conditions/');
+                    },
+                ),
+              ],
+            ),
+          ),
+
             const SizedBox(height: 20),
             SizedBox(
                 height: 60,

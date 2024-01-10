@@ -4,7 +4,7 @@ import 'package:app/models/usuario_response.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
-
+import 'package:url_launcher/url_launcher.dart';
 import '../../../config/config.dart';
 
 class Navbar extends StatefulWidget {
@@ -16,7 +16,14 @@ class Navbar extends StatefulWidget {
 
 class _NavbarState extends State<Navbar> {
   AsyncSnapshot<UsuarioResponse>? _userSnapshot;
-
+  Future<void> _launchURL(String urlString) async {
+      final Uri url = Uri.parse(urlString);
+      if (await canLaunchUrl(url)) {
+        await launchUrl(url);
+      } else {
+        throw 'No se pudo lanzar $urlString';
+      }
+    }
   @override
   Widget build(BuildContext context) {
     final authProvider = Provider.of<AuthProvider>(context);
@@ -86,11 +93,16 @@ class _NavbarState extends State<Navbar> {
           ),
           ListTile(
             title: const Text('Privacy policies', style: style),
-            onTap: () => Navigator.pushNamed(context, '/policy'),
+            onTap: () {
+              _launchURL('https://www.revu-foods.com/privacy-policy/');
+            },
           ),
+
           ListTile(
             title: const Text('Terms and conditions', style: style),
-            onTap: () => Navigator.pushNamed(context, '/term'),
+            onTap: () {
+              _launchURL('https://www.revu-foods.com/Terms-and-Conditions/');
+            },
           ),
           Row(
             children: [

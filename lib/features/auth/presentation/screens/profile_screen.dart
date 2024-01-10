@@ -5,7 +5,7 @@ import 'package:app/models/user_put_response.dart';
 import 'package:app/models/usuario_response.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
+import 'package:url_launcher/url_launcher.dart';
 import '../../../../helpers/show_alert.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -36,7 +36,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   String userInfoId = '';
 
-
+  Future<void> _launchURL(String urlString) async {
+      final Uri url = Uri.parse(urlString);
+      if (await canLaunchUrl(url)) {
+        await launchUrl(url);
+      } else {
+        throw 'No se pudo lanzar $urlString';
+      }
+    }
   void getUserInfo() async {
     final user = Provider.of<AuthProvider>(context);
     try {
@@ -155,44 +162,72 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   const SizedBox(
                     height: 20,
                   ),
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: colorPrimary,
-                    ),
-                    onPressed: () async {
-                      if (userInfoId != '') {
-                        final updateOk = await updateUser.updateUser(
-                          userInfoId,
-                          nameCtrl.text.trim(),
-                          lastnameCtrl.text.trim(),
-                          emailCtrl.text.trim(),
-                          cellphoneCtrl.text.trim(),
-                        );
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Expanded(
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: colorPrimary,
+                        ),
+                        onPressed: () async {
+                          // Lógica para guardar
+                          if (userInfoId != '') {
+                            final updateOk = await updateUser.updateUser(
+                              userInfoId,
+                              nameCtrl.text.trim(),
+                              lastnameCtrl.text.trim(),
+                              emailCtrl.text.trim(),
+                              cellphoneCtrl.text.trim(),
+                            );
 
-                        nameCtrl.text.trim();
-                        lastnameCtrl.text.trim();
-                        emailCtrl.text.trim();
-                        cellphoneCtrl.text.trim();
-                        if (updateOk == true) {
-                          showAlert(context, 'Se actualizo', 'Tu información');
-                        } else {
-                          showAlert(context, 'Update Incorrect ',
-                              updateOk.toString());
-                        }
-                      }
-                    },
-                    child: const Padding(
-                      padding: EdgeInsets.all(9.0),
-                      child: Text(
-                        'Save',
-                        style: TextStyle(
-                          fontSize: 25,
-                          color: Colors.white,
+                            nameCtrl.text.trim();
+                            lastnameCtrl.text.trim();
+                            emailCtrl.text.trim();
+                            cellphoneCtrl.text.trim();
+                            if (updateOk == true) {
+                              showAlert(context, 'Se actualizo', 'Tu información');
+                            } else {
+                              showAlert(context, 'Update Incorrect ',
+                                  updateOk.toString());
+                            }
+                          }
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.all(9.0),
+                          child: Text(
+                            'Save',
+                            style: TextStyle(
+                              fontSize: 25,
+                              color: Colors.white,
+                            ),
+                          ),
                         ),
                       ),
                     ),
-                  )
-                ],
+                    SizedBox(width: 10), // Espacio entre botones
+                    Expanded(
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Color.fromARGB(255, 150, 3, 3),
+                        ),
+                        onPressed: () async {
+                          _launchURL('https://www.revu-foods.com/account/delete-account/');
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.all(9.0),
+                          child: Text(
+                            'Delete Account',
+                            style: TextStyle(
+                              fontSize: 25,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ), ],
               ),
             )
           ],
