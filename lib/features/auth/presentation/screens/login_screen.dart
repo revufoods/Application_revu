@@ -18,6 +18,7 @@ class LoginScreen extends StatelessWidget {
     return GestureDetector(
         onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
         child: Scaffold(
+            resizeToAvoidBottomInset: true,
             backgroundColor: colorSecondary,
             body: SingleChildScrollView(
               physics: const ClampingScrollPhysics(),
@@ -32,8 +33,7 @@ class LoginScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 130),
                   Container(
-                    height:
-                        size.height - 260, // 80 los dos sizebox y 100 el ícono
+                    // 80 los dos sizebox y 100 el ícono
                     width: double.infinity,
                     decoration: const BoxDecoration(
                       color: Colors.white,
@@ -103,7 +103,6 @@ class _LoginFormState extends State<_LoginForm> {
               keyboardType: TextInputType.emailAddress,
               textController: emailCtrl,
             ),
-            const SizedBox(height: 30),
             CustomFieldInput(
               validator: (value) {
                 if (value == null || value.isEmpty) {
@@ -167,26 +166,78 @@ class _LoginFormState extends State<_LoginForm> {
                     ),
                   ),
                 )),
-            const Spacer(flex: 2),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Text('Forgot your password?'),
-                TextButton(
+            Padding(
+              padding: const EdgeInsets.only(top: 20.0),
+              child: SizedBox(
+                width: double.infinity,
+                height: 60,
+                child: ElevatedButton(
+                  onPressed: () {
+                    Navigator.pushReplacementNamed(context, '/');
+                    // Acciones a realizar cuando se presiona el botón "Log In as Guest"
+                  },
+                  style: ElevatedButton.styleFrom(
+                    foregroundColor: colorPrimary, // Color de fondo del botón
+                    // Color del texto del botón
+                    shape: RoundedRectangleBorder(
+                      borderRadius:
+                          BorderRadius.circular(20.0), // Borde redondeado
+                    ),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 16.0, horizontal: 32.0),
+                    child: Text(
+                      'Log In as a Guest',
+                      style: TextStyle(
+                        fontSize: 18.0, // Tamaño del texto
+                        fontWeight: FontWeight.bold, // Texto en negrita
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(
+                  top: 16.0), // Ajusta el valor según sea necesario
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text('Forgot your password?'),
+                  TextButton(
                     onPressed: () => Navigator.pushNamed(context, '/restore'),
-                    child: const Text('retrieve it here'))
-              ],
+                    child: const Text(
+                      'Restore password',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    style: TextButton.styleFrom(
+                      foregroundColor: Colors.blue,
+                    ),
+                  ),
+                ],
+              ),
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Text('Dont have an account?'),
-                TextButton(
+            Padding(
+              padding: const EdgeInsets.only(
+                  top: 5.0), // Ajusta el valor según sea necesario
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text('Don`t have an account?'),
+                  TextButton(
                     onPressed: () => Navigator.pushNamed(context, '/register'),
-                    child: const Text('Create one here'))
-              ],
+                    child: const Text(
+                      'Register here',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    style: TextButton.styleFrom(foregroundColor: Colors.blue),
+                  )
+                ],
+              ),
             ),
-            const Spacer(flex: 1),
           ],
         ),
       ),
