@@ -1,7 +1,6 @@
 import 'package:app/config/config.dart';
 import 'package:app/features/provider/auth_provider.dart';
 import 'package:app/features/shared/shared.dart';
-import 'package:app/models/user_put_response.dart';
 import 'package:app/models/usuario_response.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -16,7 +15,6 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-
   Usuario userInfo = Usuario(
     names: '',
     lastNames: '',
@@ -37,13 +35,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
   String userInfoId = '';
 
   Future<void> _launchURL(String urlString) async {
-      final Uri url = Uri.parse(urlString);
-      if (await canLaunchUrl(url)) {
-        await launchUrl(url);
-      } else {
-        throw 'No se pudo lanzar $urlString';
-      }
+    final Uri url = Uri.parse(urlString);
+    if (await canLaunchUrl(url)) {
+      await launchUrl(url);
+    } else {
+      throw 'No se pudo lanzar $urlString';
     }
+  }
+
   void getUserInfo() async {
     final user = Provider.of<AuthProvider>(context);
     try {
@@ -61,7 +60,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
     }
   }
 
-
   @override
   void didChangeDependencies() {
     if (_isInit) {
@@ -73,7 +71,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-
     final size = MediaQuery.of(context).size;
 
     final updateUser = Provider.of<AuthProvider>(context);
@@ -81,11 +78,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return Scaffold(
       backgroundColor: colorPrimary,
       body: SingleChildScrollView(
-        physics: const ClampingScrollPhysics(),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            const SizedBox(height: 130),
+            const SizedBox(height: 50),
             // Icon Banner
             Container(
               width: 200,
@@ -99,9 +95,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 width: 100,
               ),
             ),
-            const SizedBox(height: 130),
+            const SizedBox(height: 50),
             Container(
-              height: size.height - 260,
+              height: size.height,
               width: double.infinity,
               decoration: const BoxDecoration(
                 color: Colors.white,
@@ -162,72 +158,79 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   const SizedBox(
                     height: 20,
                   ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    Expanded(
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: colorPrimary,
-                        ),
-                        onPressed: () async {
-                          // Lógica para guardar
-                          if (userInfoId != '') {
-                            final updateOk = await updateUser.updateUser(
-                              userInfoId,
-                              nameCtrl.text.trim(),
-                              lastnameCtrl.text.trim(),
-                              emailCtrl.text.trim(),
-                              cellphoneCtrl.text.trim(),
-                            );
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: SizedBox(
+                          height: 50,
+                          child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: colorPrimary,
+                            ),
+                            onPressed: () async {
+                              // Lógica para guardar
+                              if (userInfoId != '') {
+                                final updateOk = await updateUser.updateUser(
+                                  userInfoId,
+                                  nameCtrl.text.trim(),
+                                  lastnameCtrl.text.trim(),
+                                  emailCtrl.text.trim(),
+                                  cellphoneCtrl.text.trim(),
+                                );
 
-                            nameCtrl.text.trim();
-                            lastnameCtrl.text.trim();
-                            emailCtrl.text.trim();
-                            cellphoneCtrl.text.trim();
-                            if (updateOk == true) {
-                              showAlert(context, 'Se actualizo', 'Tu información');
-                            } else {
-                              showAlert(context, 'Update Incorrect ',
-                                  updateOk.toString());
-                            }
-                          }
-                        },
-                        child: Padding(
-                          padding: const EdgeInsets.all(9.0),
-                          child: Text(
-                            'Save',
-                            style: TextStyle(
-                              fontSize: 25,
-                              color: Colors.white,
+                                nameCtrl.text.trim();
+                                lastnameCtrl.text.trim();
+                                emailCtrl.text.trim();
+                                cellphoneCtrl.text.trim();
+                                if (updateOk == true) {
+                                  showAlert(context, 'Se actualizo',
+                                      'Tu información');
+                                } else {
+                                  showAlert(context, 'Update Incorrect ',
+                                      updateOk.toString());
+                                }
+                              }
+                            },
+                            child: const Text(
+                              'Save',
+                              style: TextStyle(
+                                fontSize: 15,
+                                color: Colors.white,
+                              ),
                             ),
                           ),
                         ),
                       ),
-                    ),
-                    SizedBox(width: 10), // Espacio entre botones
-                    Expanded(
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Color.fromARGB(255, 150, 3, 3),
-                        ),
-                        onPressed: () async {
-                          _launchURL('https://www.revu-foods.com/account/delete-account/');
-                        },
-                        child: Padding(
-                          padding: const EdgeInsets.all(9.0),
-                          child: Text(
-                            'Delete Account',
-                            style: TextStyle(
-                              fontSize: 25,
-                              color: Colors.white,
+                      const SizedBox(width: 10), // Espacio entre botones
+                      Expanded(
+                        child: SizedBox(
+                          height: 50,
+                          child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor:
+                                  const Color.fromARGB(255, 150, 3, 3),
+                            ),
+                            onPressed: () async {
+                              _launchURL(
+                                  'https://www.revu-foods.com/account/delete-account/');
+                            },
+                            child: const Text(
+                              'Delete Account',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontSize: 15,
+                                color: Colors.white,
+                              ),
                             ),
                           ),
                         ),
                       ),
-                    ),
-                  ],
-                ), ],
+                      const SizedBox(width: 10),
+                    ],
+                  ),
+                ],
               ),
             )
           ],

@@ -13,40 +13,40 @@ class LoginScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
-
     return GestureDetector(
-        onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
-        child: Scaffold(
-            resizeToAvoidBottomInset: true,
-            backgroundColor: colorSecondary,
-            body: SingleChildScrollView(
-              physics: const ClampingScrollPhysics(),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  const SizedBox(height: 130),
-                  // Icon Banner
-                  const Image(
-                    image: AssetImage('assets/logo_blanco_azul.png'),
-                    width: 150,
-                  ),
-                  const SizedBox(height: 130),
-                  Container(
-                    // 80 los dos sizebox y 100 el ícono
-                    width: double.infinity,
-                    decoration: const BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(40),
-                        topRight: Radius.circular(40),
-                      ),
-                    ),
-                    child: const _LoginForm(),
-                  )
-                ],
+      onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+      child: Scaffold(
+        resizeToAvoidBottomInset: true,
+        backgroundColor: colorSecondary,
+        body: SingleChildScrollView(
+          physics: const ClampingScrollPhysics(),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              const SizedBox(height: 130),
+              // Icon Banner
+              const Image(
+                image: AssetImage('assets/logo_blanco_azul.png'),
+                width: 150,
               ),
-            )));
+              const SizedBox(height: 130),
+              Container(
+                // 80 los dos sizebox y 100 el ícono
+                width: double.infinity,
+                decoration: const BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(40),
+                    topRight: Radius.circular(40),
+                  ),
+                ),
+                child: const _LoginForm(),
+              )
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }
 
@@ -135,37 +135,37 @@ class _LoginFormState extends State<_LoginForm> {
             ),
             const SizedBox(height: 30),
             SizedBox(
-                width: double.infinity,
-                height: 60,
-                child: ElevatedButton(
-                  style:
-                      ElevatedButton.styleFrom(backgroundColor: colorPrimary),
-                  onPressed: () async {
-                    FocusScope.of(context).unfocus();
+              width: double.infinity,
+              height: 60,
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(backgroundColor: colorPrimary),
+                onPressed: () async {
+                  FocusScope.of(context).unfocus();
 
-                    if (_keyValidate.currentState?.validate() == true) {
-                      final loginOk = await authProvider.login(
-                        emailCtrl.text.trim(),
-                        passwordCtrl.text.trim(),
-                      );
+                  if (_keyValidate.currentState?.validate() == true) {
+                    final loginOk = await authProvider.login(
+                      emailCtrl.text.trim(),
+                      passwordCtrl.text.trim(),
+                    );
 
-                      if (loginOk == true) {
-                        Navigator.pushReplacementNamed(context, '/');
-                      } else {
-                        showAlert(context, 'Incorrect credentials',
-                            loginOk.toString());
-                      }
+                    if (loginOk == true) {
+                      Navigator.pushReplacementNamed(context, '/');
+                    } else {
+                      showAlert(
+                          context, 'Incorrect credentials', loginOk.toString());
                     }
-                  },
-                  child: const Text(
-                    'Ready, let`s go in',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                    ),
+                  }
+                },
+                child: const Text(
+                  'Ready, let`s go in',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
                   ),
-                )),
+                ),
+              ),
+            ),
             Padding(
               padding: const EdgeInsets.only(top: 20.0),
               child: SizedBox(
@@ -184,9 +184,9 @@ class _LoginFormState extends State<_LoginForm> {
                           BorderRadius.circular(20.0), // Borde redondeado
                     ),
                   ),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 16.0, horizontal: 32.0),
+                  child: const Padding(
+                    padding:
+                        EdgeInsets.symmetric(vertical: 16.0, horizontal: 32.0),
                     child: Text(
                       'Log In as a Guest',
                       style: TextStyle(
@@ -198,46 +198,43 @@ class _LoginFormState extends State<_LoginForm> {
                 ),
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.only(
-                  top: 16.0), // Ajusta el valor según sea necesario
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Text('Forgot your password?'),
-                  TextButton(
-                    onPressed: () => Navigator.pushNamed(context, '/restore'),
-                    child: const Text(
-                      'Restore password',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    style: TextButton.styleFrom(
-                      foregroundColor: Colors.blue,
+            const SizedBox(height: 10),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Expanded(child: Text('Forgot your password?')),
+                TextButton(
+                  onPressed: () => Navigator.pushNamed(context, '/restore'),
+                  style: TextButton.styleFrom(
+                    foregroundColor: Colors.blue,
+                  ),
+                  child: const Text(
+                    'Restore password',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
             Padding(
-              padding: const EdgeInsets.only(
-                  top: 5.0), // Ajusta el valor según sea necesario
+              padding: const EdgeInsets.only(top: 5.0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Text('Don`t have an account?'),
+                  const Expanded(child: Text('Don`t have an account?')),
                   TextButton(
                     onPressed: () => Navigator.pushNamed(context, '/register'),
+                    style: TextButton.styleFrom(foregroundColor: Colors.blue),
                     child: const Text(
                       'Register here',
                       style: TextStyle(fontWeight: FontWeight.bold),
                     ),
-                    style: TextButton.styleFrom(foregroundColor: Colors.blue),
                   )
                 ],
               ),
             ),
+            const SizedBox(height: 10),
           ],
         ),
       ),
